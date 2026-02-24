@@ -1,4 +1,4 @@
-module uart_tx #(parameter DATA_WIDTH = 8)(
+module uart_tx #(parameter DATA_WIDTH = 8, STOP_BIT_INDEX = 16)(
     input i_clk,
     input i_reset,
     input [DATA_WIDTH-1:0] i_data,
