@@ -1,14 +1,14 @@
 `timescale 1ns / 1ps
 
-module baud_gen#(parameter COUNTER_BITS = 10, parameter COUNTER_LIMIT = 651)(
+module baud_gen#(parameter BAUD_BITS = 10, parameter BAUD_LIMIT = 651)(
     input i_clk,
     input i_reset,
     output reg o_sample_tick
     );
 
 
-    reg [COUNTER_BITS-1:0] counter;
-    reg [COUNTER_BITS-1:0] counter_buf;
+    reg [BAUD_BITS-1:0] counter;
+    reg [BAUD_BITS-1:0] counter_buf;
 
 
     // Baud Rate = 9600
@@ -23,11 +23,11 @@ module baud_gen#(parameter COUNTER_BITS = 10, parameter COUNTER_LIMIT = 651)(
         end
         else begin
             counter <= counter_buf;
-            o_sample_tick <= (counter == COUNTER_LIMIT-1) ? 1 : 0;
+            o_sample_tick <= (counter == BAUD_LIMIT-1) ? 1 : 0;
         end
     end
 
-    assign counter_buf = (counter == COUNTER_LIMIT-1) ? 0 : counter + 1;
-    assign tick = (counter == COUNTER_LIMIT-1) ? 1 : 0;
+    assign counter_buf = (counter == BAUD_LIMIT-1) ? 0 : counter + 1;
+    assign tick = (counter == BAUD_LIMIT-1) ? 1 : 0;
 
 endmodule
