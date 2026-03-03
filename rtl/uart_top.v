@@ -49,7 +49,7 @@ module uart_top#(parameter DATA_WIDTH     = 8,
         .i_rd_en(tx_done_tick),
         .i_data(i_wr_data),
         .o_data(tx_fifo_out),
-        .o_empty(tx_empty)
+        .o_empty(tx_empty),
         .o_full()
     );
 
@@ -74,7 +74,7 @@ module uart_top#(parameter DATA_WIDTH     = 8,
         .i_rd_en(i_rd_uart),
         .i_data(rx_data_out),
         .o_data(o_rd_data),
-        .o_empty(o_rx_empty)
+        .o_empty(o_rx_empty),
         .o_full(o_rx_full)
     );
 

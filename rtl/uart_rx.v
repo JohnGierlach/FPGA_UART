@@ -43,7 +43,7 @@ always@(*)begin
         next_state = state;
         o_rx_done  = 1'b0;
         tick_next  = tick_reg;
-        nbits_next = nbits_reg;
+        bit_index_next = bit_index;
         data_next  = data_reg;
 
         case(state)
@@ -57,9 +57,9 @@ always@(*)begin
             START_BIT: begin
                 if (i_sample_tick) begin
                     if(tick_reg == DATA_WIDTH-1)begin
-                        next_state = data;
+                        next_state = DATA_BITS;
                         tick_next = 0;
-                        nbits_next = 0;
+                        bit_index_next = 0;
                     end
                     else
                         tick_next = tick_reg + 1;
@@ -67,7 +67,7 @@ always@(*)begin
             end
 
             DATA_BITS: begin
-                if(sample_tick)begin
+                if(i_sample_tick)begin
                     if(tick_reg == STOP_BIT_INDEX-1) begin
                         tick_next = 0;
                         data_next = {i_rx, data_reg[DATA_WIDTH-1:1]};
@@ -85,7 +85,7 @@ always@(*)begin
                 if(i_sample_tick) begin
                     if(tick_reg ==STOP_BIT_INDEX-1) begin
                         next_state = IDLE;
-                        o_rx_done = 1'b1s
+                        o_rx_done = 1'b1;
                     end
 
                     else
@@ -93,8 +93,8 @@ always@(*)begin
                 end
             end
         endcase
-
-    assign o_data = data_reg
 end
+
+assign o_data = data_reg;
 
 endmodule
