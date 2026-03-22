@@ -29,7 +29,7 @@ module uart_tx #(parameter DATA_WIDTH = 8, STOP_BIT_INDEX = 16)(
             tick_reg  <= 0;
             bit_index <= 0;
             data_reg  <= 0;
-            o_rx_done <= 0;
+            tx_reg <= 0;
         end 
 
         else begin
@@ -37,6 +37,7 @@ module uart_tx #(parameter DATA_WIDTH = 8, STOP_BIT_INDEX = 16)(
             tick_reg  <= tick_next;
             bit_index <= bit_index_next;
             data_reg  <= data_next;
+            tx_reg <= tx_next;
         end
     end
 
@@ -45,8 +46,8 @@ module uart_tx #(parameter DATA_WIDTH = 8, STOP_BIT_INDEX = 16)(
         next_state = state;
         o_tx_done  = 1'b0;
         tick_next  = tick_reg;
-        nbits_next = nbits_reg;
-        data_next  = i_data; 
+        bit_index_next = bit_index;
+        data_next  = data_reg; 
 
         case(state)
             IDLE: begin
@@ -54,16 +55,16 @@ module uart_tx #(parameter DATA_WIDTH = 8, STOP_BIT_INDEX = 16)(
                 if(i_tx_start) begin
                     next_state = START_BIT;
                     tick_next = 0;
-                    data_next = data_in;
+                    data_next = i_data;
                 end
             end
 
             START_BIT: begin
-                if(sample_tick) begin
+                if(i_sample_tick) begin
                     if(tick_reg == STOP_BIT_INDEX-1)begin
                         next_state = DATA_BITS;
                         tick_next = 0;
-                        nbits_next = 0;
+                        bit_index_next = 0;
                     end
 
                     else
@@ -73,22 +74,24 @@ module uart_tx #(parameter DATA_WIDTH = 8, STOP_BIT_INDEX = 16)(
 
             DATA_BITS: begin
                 tx_next = data_reg[0];
-                if(sample_tick)begin
+                if(i_sample_tick)begin
                     if(tick_reg == STOP_BIT_INDEX-1)begin
                         tick_next = 0;
                         data_next = data_reg >> 1;
-                        if(nbits_reg == (DATA_BITS-1))
+                        if(bit_index == (DATA_BITS-1))
                             next_state = STOP_BIT;
                         else
-                            tick_next = tick_reg + 1;
+                            bit_index_next = bit_index + 1;
                     end
+                    else
+                        tick_next = tick_reg + 1;
                 end
             end
 
             STOP_BIT: begin
                 tx_next = 1'b1;
-                if(sample_tick)begin
-                    if(tick_reg == (SB_TICK-1))begin
+                if(i_sample_tick)begin
+                    if(tick_reg == (STOP_BIT_INDEX-1))begin
                         next_state = IDLE;
                         o_tx_done = 1'b1;
                     end

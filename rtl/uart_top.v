@@ -79,8 +79,8 @@ module uart_top#(parameter DATA_WIDTH     = 8,
     );
 
     baud_gen #(
-        .COUNTER_BITS(COUNTER_BITS),
-        .BAUD_RATE(BAUD_RATE)
+        .BAUD_BITS(BAUD_BITS),
+        .BAUD_LIMIT(BAUD_LIMIT)
     )BAUD_GEN(
         .i_clk(i_clk),
         .i_reset(i_reset),

@@ -8,7 +8,7 @@ module baud_gen#(parameter BAUD_BITS = 10, parameter BAUD_LIMIT = 651)(
 
 
     reg [BAUD_BITS-1:0] counter;
-    reg [BAUD_BITS-1:0] counter_buf;
+    wire [BAUD_BITS-1:0] counter_buf;
 
 
     // Baud Rate = 9600
@@ -28,6 +28,5 @@ module baud_gen#(parameter BAUD_BITS = 10, parameter BAUD_LIMIT = 651)(
     end
 
     assign counter_buf = (counter == BAUD_LIMIT-1) ? 0 : counter + 1;
-    assign tick = (counter == BAUD_LIMIT-1) ? 1 : 0;
 
 endmodule
