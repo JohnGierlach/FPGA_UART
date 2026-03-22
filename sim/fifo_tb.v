@@ -37,6 +37,11 @@ module fifo_tb();
         .o_full(tb_full),
         .o_empty(tb_empty)
     );
+
+    initial begin
+        $dumpfile("fifo_tb.vcd");
+        $dumpvars(0, fifo_tb);
+    end
     
     // Clock generation
     initial begin

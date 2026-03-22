@@ -37,6 +37,11 @@ module uart_rx_tb();
         .o_data(tb_data),
         .o_rx_done(tb_rx_done)
     );
+
+    initial begin
+        $dumpfile("uart_rx_tb.vcd");
+        $dumpvars(0, uart_rx_tb);
+    end
     
     // Clock generation
     initial begin

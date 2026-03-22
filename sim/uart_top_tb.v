@@ -46,6 +46,11 @@ module uart_top_tb;
     );
 
     initial begin
+        $dumpfile("uart_top_tb.vcd");
+        $dumpvars(0, uart_top_tb);
+    end
+
+    initial begin
         tb_clk = 1'b0;
         forever #(CLK_PERIOD/2) tb_clk = ~tb_clk;
     end

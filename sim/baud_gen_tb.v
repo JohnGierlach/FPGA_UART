@@ -24,6 +24,11 @@ module baud_gen_tb;
     );
 
     initial begin
+        $dumpfile("baud_gen_tb.vcd");
+        $dumpvars(0, baud_gen_tb);
+    end
+
+    initial begin
         tb_clk = 1'b0;
         forever #(CLK_PERIOD/2) tb_clk = ~tb_clk;
     end
